@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+    <style>
+        /* Gaya tampilan chat */
+        #chat-messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #chat-form {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat App</h1>
+
+    <div id="chat-messages"></div>
+
+    <form id="chat-form">
+        <input type="text" id="message-input" placeholder="Tulis pesan">
+        <button type="submit">Kirim</button>
+    </form>
+
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const chatMessages = document.getElementById('chat-messages');
+
+        // Mengirim pesan saat form dikirim
+        chatForm.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const message = messageInput.value;
+            if (message.trim() !== '') {
+                sendMessage(message);
+                messageInput.value = '';
+            }
+        });
+
+        // Menerima pesan dari server dan menambahkannya ke tampilan chat
+        function receiveMessage(message) {
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+        }
+
+        // Mengirim pesan ke server menggunakan metode AJAX atau fetch API
+        function sendMessage(message) {
+            // Mengganti URL dengan endpoint server yang sesuai
+            const url = 'http://example.com/send-message';
+
+            // Menyesuaikan dengan metode AJAX atau fetch API yang digunakan
+            // Contoh menggunakan metode fetch API
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({ message }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Menampilkan pesan yang dikirimkan ke server di tampilan chat
+                receiveMessage(data.message);
+            })
+            .catch(error => {
+                console.error('Terjadi kesalahan:', error);
+            });
+        }
+    </script>
+</body>
+</html>
